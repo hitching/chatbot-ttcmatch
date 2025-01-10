@@ -23,10 +23,9 @@ def submit_enquiry():
         stream=True,
     )
 
-matching_option = None
 matching_option = st.selectbox(
     'Firstly, do you want an appointment as soon as possible, or to find the best matched GP?',
-     ['I\'m okay with any GP', 'I\'m looking for the best matched GP']
+     ['', 'I\'m okay with any GP', 'I\'m looking for the best matched GP']
 )
 
 if matching_option:
