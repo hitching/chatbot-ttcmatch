@@ -37,26 +37,26 @@ if matching_option:
     if 'best matched' in matching_option:
         who_option = st.selectbox(
             'Who are you choosing a GP for?',
-            ['Myself', 'My family']
+            ['', 'Myself', 'My family']
         )
 
         if who_option:
             who_self_age = st.selectbox(
                 'What is your age?',
-            ['18 to 25', '26 to 35', '36 to 45', '46 to 55', '56 to 65', '66 to 75', 'Over 75']
+                ['', '18 to 25', '26 to 35', '36 to 45', '46 to 55', '56 to 65', '66 to 75', 'Over 75']
             )
 
         if who_option == 'My family':
             who_partner_age = st.selectbox(
                 'Do you have a partner? What is their age?',
-                ['No', '18 to 25', '26 to 35', '36 to 45', '46 to 55', '56 to 65', '66 to 75', 'Over 75']
+                ['', 'No', '18 to 25', '26 to 35', '36 to 45', '46 to 55', '56 to 65', '66 to 75', 'Over 75']
             )
 
     gender_pref = None
     if ('any GP' in matching_option) or (who_self_age and (who_option == 'Myself' or who_partner_age)):
         gender_pref = st.selectbox(
             'Do you have a preference for a male or female GP?',
-            ['No preference', 'Male', 'Female']
+            ['', 'No preference', 'Male', 'Female']
         )
 
         locations = []
