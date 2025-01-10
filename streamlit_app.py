@@ -6,19 +6,14 @@ st.title("💬 Turn The Corner - GP Match")
 
 with st.chat_message("assistant"):
     st.write("Hi! I’m Dr. Tamsin Franklin. TTC is a team of 35 GPs, who together bring an unrivalled breadth of experience for your healthcare needs and goals.")
-    st.write("Let's ask some anonymous questions to help identify which of our GPs are the best match for your immediate or long term needs.")
-
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-#openai_api_key = st.text_input("OpenAI API Key", type="password")
+    st.write("Please answer some anonymous questions to help identify which of our GPs are the best match for your immediate or long term needs.")
 
 if "ai_response" not in st.session_state: 
     st.session_state.ai_response = None
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at a doctors clinic. Respond to the following patient enquiry with 3 answers, each from a 3 fictional TV doctor giving an in-character response to the enquiry. For each doctor's response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at a doctors clinic. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor giving an in-character response to the enquiry. For each doctor's response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Here's the enquiry: {enquiry}."
 
     st.session_state.ai_response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -28,7 +23,7 @@ def submit_enquiry():
         stream=True,
     )
 
-
+matching_option = None
 matching_option = st.selectbox(
     'Firstly, do you want an appointment as soon as possible, or to find the best matched GP?',
      ['I\'m okay with any GP', 'I\'m looking for the best matched GP']
@@ -98,8 +93,6 @@ if matching_option:
                     enquiry = st.text_area('Finally, edit your enquiry and click submit to find your best matched GPs and their available appointments:', enquiry_value)
 
                     submit_button = st.button('Submit', type="primary", on_click=submit_enquiry)
-
-
 
 if st.session_state.ai_response:
     with st.chat_message("assistant"):
