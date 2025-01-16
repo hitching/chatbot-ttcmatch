@@ -12,7 +12,7 @@ if "answers" not in st.session_state:
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Separate each response with the string <hr>. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Do not respond with anything apart from the 3 answers, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
 
     ai_response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -25,12 +25,12 @@ def submit_enquiry():
 
     st.session_state.answers = message_content.split('<hr>')
 
-new_existing_option = st.selectbox(
+history = st.selectbox(
     'Firstly, have you been seen at Turn The Corner before?',
-     ['Existing patient', 'New patient']
+     ['', 'Existing patient', 'New patient']
 )
 
-if new_existing_option:
+if history:
 
     locations = st.multiselect(
         'Great! Which Turn The Corner locations can you get to?',
@@ -45,9 +45,14 @@ if new_existing_option:
 
         if gender_pref:
 
-            goals = st.text_area('What are your health issues and goals?')
+            reason = st.selectbox(
+                'What is your reason for seeing a GP?',
+                ['', 'General 30 minute consult (adult)', 'General 30 minute consult (baby)', 'General 15 minute consult (child)', 'General 30 minute consult (child)', 'Pregnancy', '6 week post-partum', 'Mental Health', 'Travel']
+            )
 
-            if goals:
+            #goals = st.text_area('What are your health issues and goals?')
+
+            if reason:
                 target = 'the best GP'
                 if gender_pref == 'Male':
                     target = 'the best male GP'
@@ -55,9 +60,16 @@ if new_existing_option:
                     target = 'the best female GP'
 
                 location_str = ' or '.join(locations)
-                enquiry_value = f'Hi, I\'m looking for {target} in {location_str} with expertise in: {goals}.'        
-                enquiry = st.text_area('Finally, add anything else you want to share with us. Your name and contact details are not required at this stage. Click submit to find your best matched GPs and their available appointment times:', enquiry_value)
 
+                if reason.startswith('General'):
+                    enquiry_value = f'Hi, I\'m looking for {target} in {location_str} for a {reason}.'        
+                    enquiry_question = 'Finally, add some details about your health issues and goals. Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their available appointment times:'
+                    
+                else:
+                    enquiry_value = f'Hi, I\'m looking for {target} in {location_str} with expertise in: {reason}.'        
+                    enquiry_question = 'Finally, add anything else you want to share with us. Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their available appointment times:'
+
+                enquiry = st.text_area(enquiry_question, enquiry_value)
                 submit_button = st.button('Submit', type="primary", on_click=submit_enquiry)
 
 if st.session_state.answers:
@@ -79,22 +91,22 @@ if st.session_state.answers:
     
     cols = st.columns(len(st.session_state.answers))
 
+    tamsin_link = 'https://www.hotdoc.com.au/request/appointment/doctor-time?clinic=turn-the-corner-medical-clinic-fairfield&doctor=dr-tamsin-franklin-2&for=you&history=return-visit&reason=185834'
+
     # Display each answer in its respective column
     for idx, (col, answer) in enumerate(zip(cols, st.session_state.answers)):
 
         with col:
 
-            if 'Heidi Hillis' in answer:
-                answer = answer.replace('Heidi Hillis', '<a href="https://fortunaadmissions.com/team-member/heidi-hillis/" target="_blank">Heidi Hillis</a>')
-                st.html('<a href="https://fortunaadmissions.com/team-member/heidi-hillis/" target="_blank"><img src="https://poetsandquants.com/wp-content/uploads/sites/5/2015/11/Headshots-420x420.jpg" width="100%" /></a>')
+            if 'Dr. Tamsin Franklin' in answer:
+                answer = answer.replace('Dr. Tamsin Franklin', f'<a href="{tamsin_link}" target="_blank">Dr. Tamsin Franklin</a>')
+                st.html(f'<a href="{tamsin_link}" target="_blank"><img src="https://d3sjaxzllw9rho.cloudfront.net/doctor_images/202747/profile_a28e2326e1dab97511dabcc809d6c321.jpeg" width="100%" /></a>')
 
             st.markdown(answer, unsafe_allow_html=True)
 
-            name = st.text_input('Name', key=f'name-{idx}')
-            email = st.text_input('Email', key=f'email-{idx}')
-            enquiry_button = st.button('Submit', key=f'submit-{idx}', type="primary")
+            st.link_button("Book Appoinment", tamsin_link)
 
-            if 'Heidi Hillis' in answer:
+            if 'Dr. Tamsin Franklin' in answer:
                 st.html('<hr>')
                 st.html('<b>Recent reviews</b>')
                 st.html('<em>"Excellent Advisor - Stanford GSB Admit (Class Of 2027)"</em>')
@@ -104,7 +116,7 @@ if st.session_state.answers:
                 st.html('<a href="https://poetsandquants.com/consultant/heidi-hillis/" target="_blank">More...</a>')
 
                 st.html('<hr>')
-                st.html('<b>Recent articles by Heidi</b>')
+                st.html('<b>Recent articles by Dr. Franklin</b>')
                 st.html('<a href="https://fortunaadmissions.com/how-to-create-a-career-vision-for-your-mba-application/" target="_blank">How to Create a Career Vision For Your MBA Application</a>')
                 st.html('<a href="https://fortunaadmissions.com/how-to-create-an-mba-career-vision-long-term-vs-short-term-goals/" target="_blank">MBA Goals: Long Term Vs. Short Term Career Vision</a>')
                 st.html('<a href="https://fortunaadmissions.com/author/heidi/" target="_blank">More...</a>')
