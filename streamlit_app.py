@@ -4,7 +4,7 @@ from openai import OpenAI
 # Show title and description.
 st.title("💬 Book an appointment with the best local GP")
 
-st.write("We are a team of 35 amazing GPs, who together bring an unrivalled breadth and depth of experience.")
+st.write("We are a diverse group of 35 exceptional GPs, each bringing their own unique expertise, perspective, and approach to patient care, and together creating an unrivalled depth and breadth of experience as a team.")
 st.write("Chat privately with our AI to work out which of our GPs are the best match for your immediate or long term healthcare needs and goals.")
 
 if "answers" not in st.session_state: 
