@@ -16,14 +16,13 @@ if "answers" not in st.session_state:
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor {version}, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and a precise upcoming time when the doctor is available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor {version}, each giving an in-character response to the enquiry. For each response, introduce yourself and explain how your experience and specialities are relevent, and include a statement of which location(s) you work at, and a precise upcoming time when you are available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
 
     ai_response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
             {"role": "user", "content": prompt}
-        ],
-        temperature=0.2
+        ]
     )
     response_dict = ai_response.model_dump()
     message_content = response_dict["choices"][0]["message"]["content"]
