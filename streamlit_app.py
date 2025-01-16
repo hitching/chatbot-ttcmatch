@@ -12,7 +12,7 @@ if "answers" not in st.session_state:
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Do not respond with anything apart from the 3 doctor answers, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
 
     ai_response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -49,10 +49,11 @@ if history:
 
         if gender_pref:
 
-            reason_array = ['', 'General 30 minute consult (adult)', 'General 30 minute consult (baby)', 'General 15 minute consult (child)', 'General 30 minute consult (child)', 'Pregnancy', '6 week post-partum', 'Mental Health', 'Travel']
+            reason_array = ['', 'Adult - standard 15 minute consult', 'Adult - 30 minute consult for multiple issues', 'Baby - 30 minute consult', 'Child - standard 15 minute consult', 'Child - 30 minute consult for multiple issues', 'Pregnancy', '6 week post-partum', 'Mental Health', 'Travel']
             if history == 'Existing patient':
                 reason_array.append('Repeat prescription')
                 reason_array.append('Specialist referral')
+                reason_array.append('Immunisation / vaccine')
 
             reason = st.selectbox(
                 'What is your reason for seeing a GP?',
@@ -68,7 +69,7 @@ if history:
 
                 location_str = ' or '.join(locations)
 
-                if reason.startswith('General'):
+                if reason.includes('consult'):
                     enquiry_value = f'Hi, I\'m looking for {target} in {location_str} for a {reason}.'        
                     enquiry_question = 'Finally, add some details about your health issues and goals.'
                     
@@ -116,11 +117,12 @@ if st.session_state.answers:
             if 'Dr. Tamsin Franklin' in answer:
                 st.html('<hr>')
                 st.html('<b>Recent reviews</b>')
-                st.html('<em>"Excellent Advisor - Stanford GSB Admit (Class Of 2027)"</em>')
-                st.html('⭐⭐⭐⭐⭐ <small><a href="https://poetsandquants.com/consultant/heidi-hillis/" target="_blank">3 weeks ago</a></small>')
-                st.html('<em>"Best Coach I Could Have Asked For! Best Coach! (Stanford / Columbia)"</em>')
-                st.html('⭐⭐⭐⭐⭐ <small><a href="https://poetsandquants.com/consultant/heidi-hillis/" target="_blank">1 month ago</a></small>')
-                st.html('<a href="https://poetsandquants.com/consultant/heidi-hillis/" target="_blank">More...</a>')
+                st.html('<em>"the most thorough and precise doctor I have ever known"</em>')
+                st.html('⭐⭐⭐⭐⭐ <small><a href="https://maps.app.goo.gl/1VtxdC2Rhcnchbdb7" target="_blank">a year ago</a></small>')
+
+                st.html('<em>"Dr Franklin is very attentive, friendly and informative"</em>')
+                st.html('⭐⭐⭐⭐⭐ <small><a href="https://maps.app.goo.gl/AtotFxPPhJvo9b6i8" target="_blank">a year ago</a></small>')
+                st.html('<a href="https://maps.app.goo.gl/B8dRrnwQ2Hv23Gic9" target="_blank">More...</a>')
 
                 st.html('<hr>')
                 st.html('<b>Recent articles by Dr. Franklin</b>')
