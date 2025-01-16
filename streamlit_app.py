@@ -111,6 +111,8 @@ if st.session_state.answers:
 
             st.markdown(answer, unsafe_allow_html=True)
 
+            st.link_button("Book Appoinment", type="primary", url=tamsin_link)
+
             if 'Dr. Tamsin Franklin' in answer:
                 st.html('<hr>')
                 st.html('<b>Recent reviews</b>')
@@ -124,9 +126,4 @@ if st.session_state.answers:
                 st.html('<b>Recent articles by Dr. Franklin</b>')
                 st.html('<a href="https://fortunaadmissions.com/how-to-create-a-career-vision-for-your-mba-application/" target="_blank">How to Create a Career Vision For Your MBA Application</a>')
                 st.html('<a href="https://fortunaadmissions.com/how-to-create-an-mba-career-vision-long-term-vs-short-term-goals/" target="_blank">MBA Goals: Long Term Vs. Short Term Career Vision</a>')
-                st.html('<a href="https://fortunaadmissions.com/author/heidi/" target="_blank">More...</a>')
-
-    # Display each answer in its respective column
-    for idx, (col, answer) in enumerate(zip(cols, st.session_state.answers)):
-        with col:
-            st.link_button("Book Appoinment", type="primary", url=tamsin_link)
+                st.html('<a href="https://fortunaadmissions.com/author/heidi/" target="_blank">More...</a>')           
