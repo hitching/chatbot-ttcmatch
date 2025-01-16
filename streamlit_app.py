@@ -104,7 +104,7 @@ if st.session_state.answers:
 
             st.markdown(answer, unsafe_allow_html=True)
 
-            st.link_button("Book Appoinment", type="primary", tamsin_link)
+            st.link_button("Book Appoinment", type="primary", url=tamsin_link)
 
             if 'Dr. Tamsin Franklin' in answer:
                 st.html('<hr>')
