@@ -9,7 +9,7 @@ if st.query_params.get("version") == 'tamsin':
 st.title("💬 Book an appointment with the best local GP")
 st.write("We are a diverse group of 35 exceptional GPs, each bringing their own unique expertise, perspective, and approach to patient care, and together creating an unrivalled depth and breadth of experience as a team.")
 st.write("Chat privately with our AI to work out which of our GPs are the best match for your immediate or long term healthcare needs and goals.")
-st.warning('This demo AI agent is currently trained on fictional TV doctors, not real GPs yet!', icon="⚠️")
+st.warning('This demo AI agent is trained on fictional TV doctor data, rather than real proprietary data.', icon="⚠️")
 
 if "answers" not in st.session_state: 
     st.session_state.answers = []
