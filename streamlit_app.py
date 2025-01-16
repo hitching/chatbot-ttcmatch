@@ -22,7 +22,8 @@ def submit_enquiry():
         model="gpt-4o-mini",
         messages=[
             {"role": "user", "content": prompt}
-        ]
+        ],
+        temperature=0.2
     )
     response_dict = ai_response.model_dump()
     message_content = response_dict["choices"][0]["message"]["content"]
