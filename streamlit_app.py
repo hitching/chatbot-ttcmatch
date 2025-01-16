@@ -1,18 +1,22 @@
 import streamlit as st
 from openai import OpenAI
 
+version = ''
+if st.query_params.get("version") == 'tamsin':
+    version = 'or Dr. Tamsin Franklin of Turn The Corner'
+
 # Show title and description.
 st.title("💬 Book an appointment with the best local GP")
-
 st.write("We are a diverse group of 35 exceptional GPs, each bringing their own unique expertise, perspective, and approach to patient care, and together creating an unrivalled depth and breadth of experience as a team.")
 st.write("Chat privately with our AI to work out which of our GPs are the best match for your immediate or long term healthcare needs and goals.")
+st.warning('This demo AI agent is currently trained on fictional TV doctors, not real GPs yet!', icon="⚠️")
 
 if "answers" not in st.session_state: 
     st.session_state.answers = []
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and a precise upcoming time when the doctor is available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor {version}, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and a precise upcoming time when the doctor is available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
 
     ai_response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -77,7 +81,7 @@ if history:
                     enquiry_value = f'Hi, I\'m looking for {target} in {location_str} with expertise in: {reason}.'        
                     enquiry_question = 'Finally, add anything else you want to share with us.'
 
-                enquiry = st.text_area(f'{enquiry_question} Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their available appointment times:', enquiry_value)
+                enquiry = st.text_area(f'{enquiry_question} Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their upcoming appointment times:', enquiry_value)
                 st.button('Submit', type="primary", on_click=submit_enquiry)
 
 if st.session_state.answers:
