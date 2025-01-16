@@ -69,7 +69,7 @@ if history:
 
                 location_str = ' or '.join(locations)
 
-                if reason.includes('consult'):
+                if 'consult' in reason:
                     enquiry_value = f'Hi, I\'m looking for {target} in {location_str} for a {reason}.'        
                     enquiry_question = 'Finally, add some details about your health issues and goals.'
                     
