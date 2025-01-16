@@ -12,7 +12,7 @@ if "answers" not in st.session_state:
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Do not respond with anything apart from the 3 answers, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Do not respond with anything apart from the 3 doctor answers, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
 
     ai_response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -26,7 +26,7 @@ def submit_enquiry():
     st.session_state.answers = message_content.split('<hr>')
 
 history = st.selectbox(
-    'Firstly, have you been seen at Turn The Corner before?',
+    'Firstly, have you been to a Turn The Corner clinic before?',
      ['', 'Existing patient', 'New patient']
 )
 
@@ -34,7 +34,7 @@ if history:
 
     locations = st.multiselect(
         'Great! Which Turn The Corner locations can you get to?',
-        ['Northcote', 'Brunswick', 'Fairfield']
+        ['Northcote - 409 High St', 'Brunswick - 301 Albert St', 'Fairfield - 278 Wingrove St']
     )
 
     if locations:
@@ -63,14 +63,14 @@ if history:
 
                 if reason.startswith('General'):
                     enquiry_value = f'Hi, I\'m looking for {target} in {location_str} for a {reason}.'        
-                    enquiry_question = 'Finally, add some details about your health issues and goals. Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their available appointment times:'
+                    enquiry_question = 'Finally, add some details about your health issues and goals.'
                     
                 else:
                     enquiry_value = f'Hi, I\'m looking for {target} in {location_str} with expertise in: {reason}.'        
-                    enquiry_question = 'Finally, add anything else you want to share with us. Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their available appointment times:'
+                    enquiry_question = 'Finally, add anything else you want to share with us.'
 
-                enquiry = st.text_area(enquiry_question, enquiry_value)
-                submit_button = st.button('Submit', type="primary", on_click=submit_enquiry)
+                enquiry = st.text_area(f'{enquiry_question} Your name and contact details are not required at this stage. Click submit to find your best matching GPs and their available appointment times:', enquiry_value)
+                st.button('Submit', type="primary", on_click=submit_enquiry)
 
 if st.session_state.answers:
     st.markdown(
@@ -104,7 +104,7 @@ if st.session_state.answers:
 
             st.markdown(answer, unsafe_allow_html=True)
 
-            st.link_button("Book Appoinment", tamsin_link)
+            st.link_button("Book Appoinment", type="primary", tamsin_link)
 
             if 'Dr. Tamsin Franklin' in answer:
                 st.html('<hr>')
