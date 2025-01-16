@@ -34,7 +34,7 @@ if history:
 
     locations = st.multiselect(
         'Great! Which Turn The Corner locations can you get to?',
-        ['Northcote - 409 High St', 'Brunswick - 301 Albert St', 'Fairfield - 278 Wingrove St']
+        ['Northcote', 'Brunswick', 'Fairfield']
     )
 
     if locations:
