@@ -12,7 +12,7 @@ if "answers" not in st.session_state:
 
 client = OpenAI(api_key=st.secrets["openai_key"])
 def submit_enquiry():
-    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and when the doctor is available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
+    prompt = f"You are the receptionist at Turn The Corner doctors. Respond to the following patient enquiry with 3 answers, each from a fictional TV doctor or Dr. Tamsin Franklin of Turn The Corner, each giving an in-character response to the enquiry. For each response, include a statement of which location(s) from the enquiry the doctor works at, and a precise upcoming time when the doctor is available for an appointment. Do not include any introductory text, explanations, or anything beyond the answers themselves, and separate each response with the string <hr>. Here's the enquiry: {enquiry}."
 
     ai_response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -126,6 +126,6 @@ if st.session_state.answers:
 
                 st.html('<hr>')
                 st.html('<b>Recent articles by Dr. Franklin</b>')
-                st.html('<a href="https://fortunaadmissions.com/how-to-create-a-career-vision-for-your-mba-application/" target="_blank">How to Create a Career Vision For Your MBA Application</a>')
-                st.html('<a href="https://fortunaadmissions.com/how-to-create-an-mba-career-vision-long-term-vs-short-term-goals/" target="_blank">MBA Goals: Long Term Vs. Short Term Career Vision</a>')
-                st.html('<a href="https://fortunaadmissions.com/author/heidi/" target="_blank">More...</a>')           
+                st.html('<a href="https://www.turnthecorner.com.au/meningococcal-b-vaccinations/" target="_blank">Meningococcal B vaccinations</a>')
+                st.html('<a href="https://www.turnthecorner.com.au/thunderstorm-asthma/" target="_blank">Thunderstorm asthma</a>')
+                st.html('<a href="https://www.turnthecorner.com.au/news/" target="_blank">More...</a>')           
