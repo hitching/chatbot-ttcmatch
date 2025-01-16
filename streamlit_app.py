@@ -32,9 +32,13 @@ history = st.selectbox(
 
 if history:
 
+    location_array = ['Northcote', 'Brunswick', 'Fairfield']
+    if history == 'Existing patient':
+        location_array.append('Telehealth / online')
+
     locations = st.multiselect(
         'Great! Which Turn The Corner locations can you get to?',
-        ['Northcote', 'Brunswick', 'Fairfield']
+        location_array
     )
 
     if locations:
@@ -45,12 +49,15 @@ if history:
 
         if gender_pref:
 
+            reason_array = ['', 'General 30 minute consult (adult)', 'General 30 minute consult (baby)', 'General 15 minute consult (child)', 'General 30 minute consult (child)', 'Pregnancy', '6 week post-partum', 'Mental Health', 'Travel']
+            if history == 'Existing patient':
+                reason_array.append('Repeat prescription')
+                reason_array.append('Specialist referral')
+
             reason = st.selectbox(
                 'What is your reason for seeing a GP?',
-                ['', 'General 30 minute consult (adult)', 'General 30 minute consult (baby)', 'General 15 minute consult (child)', 'General 30 minute consult (child)', 'Pregnancy', '6 week post-partum', 'Mental Health', 'Travel']
+                reason_array
             )
-
-            #goals = st.text_area('What are your health issues and goals?')
 
             if reason:
                 target = 'the best GP'
@@ -104,8 +111,6 @@ if st.session_state.answers:
 
             st.markdown(answer, unsafe_allow_html=True)
 
-            st.link_button("Book Appoinment", type="primary", url=tamsin_link)
-
             if 'Dr. Tamsin Franklin' in answer:
                 st.html('<hr>')
                 st.html('<b>Recent reviews</b>')
@@ -120,3 +125,8 @@ if st.session_state.answers:
                 st.html('<a href="https://fortunaadmissions.com/how-to-create-a-career-vision-for-your-mba-application/" target="_blank">How to Create a Career Vision For Your MBA Application</a>')
                 st.html('<a href="https://fortunaadmissions.com/how-to-create-an-mba-career-vision-long-term-vs-short-term-goals/" target="_blank">MBA Goals: Long Term Vs. Short Term Career Vision</a>')
                 st.html('<a href="https://fortunaadmissions.com/author/heidi/" target="_blank">More...</a>')
+
+    # Display each answer in its respective column
+    for idx, (col, answer) in enumerate(zip(cols, st.session_state.answers)):
+        with col:
+            st.link_button("Book Appoinment", type="primary", url=tamsin_link)
